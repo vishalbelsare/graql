@@ -23,6 +23,9 @@ import graql.lang.statement.StatementType;
 
 import java.util.stream.Stream;
 
+import static graql.lang.Graql.Token.Char.SPACE;
+import static graql.lang.Graql.Token.Property.IS_KEY;
+
 /**
  * Represents the {@code has} and {@code key} properties on a Type.
  * This property can be queried or inserted. Whether this is a key is indicated by the
@@ -50,7 +53,7 @@ public class HasAttributeTypeProperty extends VarProperty {
 
     @Override
     public String keyword() {
-        return isKey ? Graql.Token.Property.KEY.toString() : Graql.Token.Property.HAS.toString();
+        return Graql.Token.Property.HAS.toString();
     }
 
     @Override
@@ -76,6 +79,13 @@ public class HasAttributeTypeProperty extends VarProperty {
     @Override
     public Class statementClass() {
         return StatementType.class;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder().append(keyword()).append(SPACE).append(property());
+        if (isKey) str.append(SPACE).append(IS_KEY);
+        return str.toString();
     }
 
     @Override

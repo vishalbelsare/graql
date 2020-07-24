@@ -700,7 +700,7 @@ public class Graql {
             VALUE(""),
             VALUE_TYPE("value"),
             HAS("has"),
-            KEY("key"),
+            IS_KEY("@key"),
             ID("id"),
             ABSTRACT("abstract"),
             ISA("isa"),

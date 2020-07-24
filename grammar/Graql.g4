@@ -98,8 +98,7 @@ pattern_statement   :   statement_type
 statement_type      :   type_ref type_property ( ',' type_property )* ';' ;
 type_property       :   ABSTRACT
                     |   SUB_        type_ref
-                    |   KEY         type
-                    |   HAS         type
+                    |   HAS         type ( IS_KEY )?
                     |   PLAYS       type_scoped
                     |   RELATES     type ( AS type )?
                     |   VALUE       value_type
@@ -262,7 +261,7 @@ ID              : 'id'          ;   TYPE            : 'type'        ;
 ISA_            : ISA | ISAX    ;   SUB_            : SUB | SUBX    ;
 ISA             : 'isa'         ;   ISAX            : 'isa!'        ;
 SUB             : 'sub'         ;   SUBX            : 'sub!'        ;
-KEY             : 'key'         ;   HAS             : 'has'         ;
+HAS             : 'has'         ;   IS_KEY          : '@key'        ;
 PLAYS           : 'plays'       ;   RELATES         : 'relates'     ;
 VALUE           : 'value'       ;   REGEX           : 'regex'       ;
 WHEN            : 'when'        ;   THEN            : 'then'        ;

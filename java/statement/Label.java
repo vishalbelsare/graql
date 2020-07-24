@@ -32,7 +32,7 @@ public class Label implements Comparable<Label>, Serializable {
     private final String scope;
     private final String scopedName;
 
-    public Label(String name, @Nullable String scope) {
+    private Label(String name, @Nullable String scope) {
         if (name == null) {
             throw new NullPointerException("Null value");
         }

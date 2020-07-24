@@ -49,7 +49,7 @@ public interface StatementTypeBuilder {
     
     @CheckReturnValue
     default StatementType type(String label) {
-        return type(new TypeProperty(Label.of(label, null)));
+        return type(new TypeProperty(Label.of(label)));
     }
 
     @CheckReturnValue
@@ -110,46 +110,21 @@ public interface StatementTypeBuilder {
         return sub(new SubProperty(type, true));
     }
 
-    /**
-     * @param type a resource type that this type variable can be one-to-one related to
-     * @return this
-     */
-    @CheckReturnValue
-    default StatementType key(String type) {
-        return key(Graql.var().type(type));
-    }
-
-    /**
-     * @param type a resource type that this type variable can be one-to-one related to
-     * @return this
-     */
-    @CheckReturnValue
-    default StatementType key(Statement type) {
-        return type(new HasAttributeTypeProperty(type, true));
-    }
-
-    /**
-     * @param type a resource type that this type variable can be related to
-     * @return this
-     */
     @CheckReturnValue
     default StatementType has(String type) {
         return has(Graql.type(type, null));
     }
 
-    /**
-     * @param type a resource type that this type variable can be related to
-     * @return this
-     */
     @CheckReturnValue
     default StatementType has(Statement type) {
-        return type(new HasAttributeTypeProperty(type, false));
+        return has(type, false);
     }
 
-    /**
-     * @param type a Role id that this concept type variable must play
-     * @return this
-     */
+    @CheckReturnValue
+    default StatementType has(Statement type, boolean isKey) {
+        return type(new HasAttributeTypeProperty(type, isKey));
+    }
+
     @CheckReturnValue
     default StatementType plays(String type, String scope) {
         if (scope == null) {
@@ -158,10 +133,6 @@ public interface StatementTypeBuilder {
         return plays(Graql.type(type, scope));
     }
 
-    /**
-     * @param type a Role that this concept type variable must play
-     * @return this
-     */
     @CheckReturnValue
     default StatementType plays(Statement type) {
         return type(new PlaysProperty(type, false));

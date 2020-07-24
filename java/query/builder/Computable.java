@@ -67,9 +67,9 @@ public interface Computable {
         @CheckReturnValue
         default T of(String type, String... types) {
             ArrayList<Label> typeList = new ArrayList<>(types.length + 1);
-            typeList.add(Label.of(type, null));
+            typeList.add(Label.of(type));
             for (String t : types) {
-                typeList.add(Label.of(t, null));
+                typeList.add(Label.of(t));
             }
 
             return of(typeList);
@@ -101,9 +101,9 @@ public interface Computable {
         @CheckReturnValue
         default T in(String type, String... types) {
             ArrayList<Label> typeList = new ArrayList<>(types.length + 1);
-            typeList.add(Label.of(type, null));
+            typeList.add(Label.of(type));
             for (String t : types) {
-                typeList.add(Label.of(t, null));
+                typeList.add(Label.of(t));
             }
 
             return in(typeList);

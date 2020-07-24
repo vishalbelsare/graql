@@ -616,11 +616,8 @@ public class Parser extends GraqlBaseVisitor {
                     throw new IllegalArgumentException("Unrecognised SUB Property: " + property.type(0).getText());
                 }
 
-            } else if (property.KEY() != null) {
-                type = type.key(visitType(property.type(0)));
-
             } else if (property.HAS() != null) {
-                type = type.has(visitType(property.type(0)));
+                type = type.has(visitType(property.type(0)), property.IS_KEY() != null);
 
             } else if (property.PLAYS() != null) {
                 type = type.plays(visitType_scoped(property.type_scoped()));
@@ -876,11 +873,11 @@ public class Parser extends GraqlBaseVisitor {
     @Override
     public Label visitType_label(GraqlParser.Type_labelContext ctx) {
         if (ctx.type_native() != null) {
-            return Label.of(ctx.type_native().getText(), null);
+            return Label.of(ctx.type_native().getText());
         } else if (ctx.type_name() != null) {
-            return Label.of(ctx.type_name().getText(), null);
+            return Label.of(ctx.type_name().getText());
         } else {
-            return Label.of(ctx.unreserved().getText(), null);
+            return Label.of(ctx.unreserved().getText());
         }
     }
 
