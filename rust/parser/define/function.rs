@@ -121,7 +121,7 @@ fn visit_function_signature(node: Node<'_>) -> Signature {
     let span = node.span();
     let mut children = node.into_children();
     let sigil = visit_identifier(children.consume_expected(Rule::identifier));
-    let args = visit_function_arguments(children.consume_expected(Rule::function_arguments));
+    let args = visit_pipeline_arguments(children.consume_expected(Rule::pipeline_arguments));
     let return_types = visit_function_output(children.consume_expected(Rule::function_output));
 
     debug_assert_eq!(children.try_consume_any(), None);
@@ -150,13 +150,13 @@ fn visit_function_output_single(node: Node<'_>) -> Single {
     Single::new(span, node.into_children().map(visit_named_type_any).collect())
 }
 
-fn visit_function_arguments(node: Node<'_>) -> Vec<Argument> {
-    debug_assert_eq!(node.as_rule(), Rule::function_arguments);
-    node.into_children().map(visit_function_argument).collect()
+pub(crate) fn visit_pipeline_arguments(node: Node<'_>) -> Vec<Argument> {
+    debug_assert_eq!(node.as_rule(), Rule::pipeline_arguments);
+    node.into_children().map(visit_pipeline_argument).collect()
 }
 
-fn visit_function_argument(node: Node<'_>) -> Argument {
-    debug_assert_eq!(node.as_rule(), Rule::function_argument);
+fn visit_pipeline_argument(node: Node<'_>) -> Argument {
+    debug_assert_eq!(node.as_rule(), Rule::pipeline_argument);
     let span = node.span();
     let mut children = node.into_children();
 

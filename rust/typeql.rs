@@ -94,8 +94,9 @@ pub fn is_reserved_keyword(word: &str) -> bool {
     RESERVED_KEYWORDS_LOOKUP.get_or_init(generate_reserved_keywords_lookup).contains(word)
 }
 
-const KEYWORDS: [&str; 41] = [
+const KEYWORDS: [&str; 42] = [
     "with",
+    "given",
     "match",
     "fetch",
     "update",

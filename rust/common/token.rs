@@ -118,6 +118,7 @@ string_enum! { Keyword
     First = "first",
     From = "from",
     Fun = "fun",
+    Given = "given",
     Has = "has",
     IID = "iid",
     In = "in",

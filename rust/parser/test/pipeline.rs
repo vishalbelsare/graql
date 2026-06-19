@@ -21,6 +21,16 @@ watches (watched: $x, watcher: $y);"#;
 }
 
 #[test]
+fn test_data_pipeline_with_given() {
+    let query = r#"given $n: string;
+insert
+$y isa person,
+    has name == $name;"#;
+    let parsed = parse_query(query).unwrap();
+    assert_valid_eq_repr!(expected, parsed, query);
+}
+
+#[test]
 fn test_parsing_two_pipelines() {
     let queries = r#"match
 $x isa movie;

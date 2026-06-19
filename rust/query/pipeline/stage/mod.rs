@@ -7,8 +7,8 @@
 use std::fmt;
 
 pub use self::{
-    delete::Delete, fetch::Fetch, insert::Insert, match_::Match, modifier::Operator, put::Put, reduce::Reduce,
-    update::Update,
+    delete::Delete, fetch::Fetch, given::Given, insert::Insert, match_::Match, modifier::Operator, put::Put,
+    reduce::Reduce, update::Update,
 };
 use crate::{
     common::{Span, Spanned},
@@ -18,6 +18,7 @@ use crate::{
 
 pub mod delete;
 pub mod fetch;
+pub mod given;
 mod insert;
 mod match_;
 pub mod modifier;
@@ -27,6 +28,7 @@ mod update;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub enum Stage {
+    Given(Given),
     Match(Match),
     Insert(Insert),
     Put(Put),
@@ -37,6 +39,7 @@ pub enum Stage {
 }
 
 enum_getter! { Stage
+    into_given(Given) => Given,
     into_match(Match) => Match,
     into_insert(Insert) => Insert,
     into_put(Put) => Put,
@@ -49,6 +52,7 @@ enum_getter! { Stage
 impl Spanned for Stage {
     fn span(&self) -> Option<Span> {
         match self {
+            Self::Given(inner) => inner.span(),
             Self::Match(inner) => inner.span(),
             Self::Insert(inner) => inner.span(),
             Self::Put(inner) => inner.span(),
@@ -63,6 +67,7 @@ impl Spanned for Stage {
 impl Pretty for Stage {
     fn fmt(&self, indent_level: usize, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Given(inner) => Pretty::fmt(inner, indent_level, f),
             Self::Match(inner) => Pretty::fmt(inner, indent_level, f),
             Self::Insert(inner) => Pretty::fmt(inner, indent_level, f),
             Self::Put(inner) => Pretty::fmt(inner, indent_level, f),
@@ -77,6 +82,7 @@ impl Pretty for Stage {
 impl fmt::Display for Stage {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::Given(inner) => fmt::Display::fmt(inner, f),
             Self::Match(inner) => fmt::Display::fmt(inner, f),
             Self::Insert(inner) => fmt::Display::fmt(inner, f),
             Self::Put(inner) => fmt::Display::fmt(inner, f),

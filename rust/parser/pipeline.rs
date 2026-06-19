@@ -22,7 +22,7 @@ use crate::{
         error::TypeQLError,
         token::{Order, ReduceOperatorCollect, ReduceOperatorStat},
     },
-    parser::define::function::visit_function_block,
+    parser::define::function::{visit_function_block, visit_pipeline_arguments},
     pattern::{Conjunction, Disjunction, Negation, Optional, Pattern},
     query::{
         Pipeline,
@@ -32,6 +32,7 @@ use crate::{
                 Delete, Fetch, Insert, Match, Operator, Put, Reduce, Stage, Update,
                 delete::{Deletable, DeletableKind},
                 fetch::FetchSome,
+                given::Given,
                 modifier::{Distinct, Limit, Offset, OrderedVariable, Require, Select, Sort},
                 reduce::{Collect, Count, Reducer, Stat},
             },
@@ -61,11 +62,24 @@ pub(super) fn visit_query_pipeline_preambled(node: Node<'_>) -> Pipeline {
 fn visit_query_pipeline(node: Node<'_>) -> Vec<Stage> {
     debug_assert_eq!(node.as_rule(), Rule::query_pipeline);
     let mut children = node.into_children();
-    let mut stages =
-        children.take_while_ref(|child| child.as_rule() == Rule::query_stage).map(visit_query_stage).collect_vec();
+    let mut stages = Vec::new();
+    stages.extend(children.try_consume_expected(Rule::query_stage_given).map(visit_query_stage_given));
+    stages.extend(
+        children.take_while_ref(|child| child.as_rule() == Rule::query_stage).map(visit_query_stage).collect_vec(),
+    );
     stages.extend(children.try_consume_expected(Rule::query_stage_terminal).map(visit_query_stage_terminal));
     debug_assert_eq!(children.try_consume_any(), None);
     stages
+}
+
+fn visit_query_stage_given(node: Node<'_>) -> Stage {
+    debug_assert_eq!(node.as_rule(), Rule::query_stage_given);
+    let span = node.span();
+    let mut children = node.into_children();
+    let variables =
+        visit_pipeline_arguments(children.skip_expected(Rule::GIVEN).consume_expected(Rule::pipeline_arguments));
+    debug_assert_eq!(children.try_consume_any(), None);
+    Stage::Given(Given::new(span, variables))
 }
 
 fn visit_preamble(node: Node<'_>) -> Preamble {
