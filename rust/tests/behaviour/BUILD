@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
 load("@rules_rust//rust:defs.bzl", "rust_test", "rust_library")
 load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
@@ -33,6 +32,7 @@ rust_test(
     env = {
         "TYPEDB_BEHAVIOUR_FEATURE_MARKER": "$(rootpath @typedb_behaviour//query/language:define.feature)",
     },
+    timeout = "long",
 )
 
 rust_test(

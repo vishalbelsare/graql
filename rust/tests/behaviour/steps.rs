@@ -73,7 +73,6 @@ fn strip_all(query: &str) -> String {
 }
 
 generic_step_impl! {
-
     #[step("typeql read query")]
     #[step("typeql schema query")]
     #[step("typeql write query")]
@@ -82,9 +81,16 @@ generic_step_impl! {
     #[step(regex = "typeql schema query; fails.*")]
     #[step("get answers of typeql read query")]
     #[step("get answers of typeql write query")]
+    #[step("get answers of typeql read query with given rows")]
+    #[step("get answers of typeql write query with given rows")]
+    #[step(regex = "typeql read query with given rows; fails.*")]
+    #[step(regex = "typeql write query with given rows; fails.*")]
     async fn typeql_query(_: &mut TypeQLWorld, step: &Step) {
         let query_string = get_step_query(step).trim();
-        let parsed = parse_query(query_string).expect("Unexpected query parsing error.");
+        let parsed = match parse_query(query_string) {
+            Ok(parsed) => parsed,
+            Err(err) => panic!("Unexpected query parsing error: {err}"),
+        };
         assert_eq!(
             strip_all(query_string),
             strip_all(&parsed.to_string())
@@ -134,5 +140,6 @@ generic_step_impl! {
     #[step("reasoning schema")]
     #[step("reasoning data")]
     #[step("reasoning query")]
+    #[step("query is given rows")]
     async fn do_nothing(_: &mut TypeQLWorld) {}
 }
