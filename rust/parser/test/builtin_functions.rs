@@ -114,3 +114,11 @@ let $value = round($net * 1.21);"#;
     //     );
     assert_valid_eq_repr!(expected, parsed, query);
 }
+
+#[test]
+fn test_std_namespaced_func() {
+    let query = r#"match
+let $x = first::second::third($y);"#;
+    let parsed = parse_query(query).unwrap();
+    assert_valid_eq_repr!(expected, parsed, query);
+}
